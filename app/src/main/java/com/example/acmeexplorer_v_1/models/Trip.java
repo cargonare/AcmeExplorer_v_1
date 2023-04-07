@@ -4,116 +4,122 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 public class Trip implements Serializable {
-    private UUID id;
-    private String startCity;
-    private String endCity;
-    private BigDecimal price;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private Boolean isSelected;
-    private String imageUrl;
+    private int id;
+    private String ciudadProcedencia;
+    private String ciudadDestino;
+    private Double precio;
+    private LocalDate fechaIda;
+    private LocalDate fechaVuelta;
+    private Boolean seleccionar;
+    private String urlImagenes;
 
-    public Trip(UUID id, String startCity, String endCity, BigDecimal price, LocalDate startDate, LocalDate endDate, Boolean isSelected, String imageUrl) {
+    public Trip(int id, String ciudadProcedencia, String ciudadDestino, Double precio, LocalDate fechaIda, LocalDate fechaVuelta, Boolean seleccionar, String urlImagenes) {
         this.id = id;
-        this.startCity = startCity;
-        this.endCity = endCity;
-        this.price = price;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.isSelected = isSelected;
-        this.imageUrl = imageUrl;
+        this.ciudadProcedencia = ciudadProcedencia;
+        this.ciudadDestino = ciudadDestino;
+        this.precio = precio;
+        this.fechaIda = fechaIda;
+        this.fechaVuelta = fechaVuelta;
+        this.seleccionar = seleccionar;
+        this.urlImagenes = urlImagenes;
     }
 
-    public UUID getId() {
+    public Trip() {
+
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getStartCity() {
-        return startCity;
+    public String getCiudadProcedencia() {
+        return ciudadProcedencia;
     }
 
-    public void setStartCity(String startCity) {
-        this.startCity = startCity;
+    public void setCiudadProcedencia(String ciudadProcedencia) {
+        this.ciudadProcedencia = ciudadProcedencia;
     }
 
-    public String getEndCity() {
-        return endCity;
+    public String getCiudadDestino() {
+        return ciudadDestino;
     }
 
-    public void setEndCity(String endCity) {
-        this.endCity = endCity;
+    public void setCiudadDestino(String ciudadDestino) {
+        this.ciudadDestino = ciudadDestino;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public Double getPrecio() {
+        return precio;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setPrecio(Double precio) {
+        this.precio = precio;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public LocalDate getFechaIda() {
+        return fechaIda;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setFechaIda(LocalDate fechaIda) {
+        this.fechaIda = fechaIda;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public LocalDate getFechaVuelta() {
+        return fechaVuelta;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setFechaVuelta(LocalDate fechaVuelta) {
+        this.fechaVuelta = fechaVuelta;
     }
 
-    public Boolean getSelected() {
-        return isSelected;
+    public Boolean getSeleccionar() {
+        return seleccionar;
     }
 
-    public void setSelected(Boolean selected) {
-        isSelected = selected;
+    public void setSeleccionar(Boolean seleccionar) {
+        this.seleccionar = seleccionar;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getUrlImagenes() {
+        return urlImagenes;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setUrlImagenes(String urlImagenes) {
+        this.urlImagenes = urlImagenes;
     }
 
     @Override
     public String toString() {
         return "Trip{" +
                 "id=" + id +
-                ", startCity='" + startCity + '\'' +
-                ", endCity='" + endCity + '\'' +
-                ", price=" + price +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", isSelected=" + isSelected +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", ciudadProcedencia='" + ciudadProcedencia + '\'' +
+                ", ciudadDestino='" + ciudadDestino + '\'' +
+                ", precio=" + precio +
+                ", fechaIda=" + fechaIda +
+                ", fechaVuelta=" + fechaVuelta +
+                ", seleccionar=" + seleccionar +
+                ", urlImagenes='" + urlImagenes + '\'' +
                 '}';
     }
 
-    public static ArrayList<Trip> createTripsList() {
+    public static ArrayList<Trip> generarViajes() {
         ArrayList<Trip> trips = new ArrayList<>();
+        Random random=new Random();
 
-        trips.add(new Trip(UUID.randomUUID(),"Miami", "Orlando", new BigDecimal(200), LocalDate.of(2022, 05, 10), LocalDate.of(2022, 10, 14), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/09/e0/eb/universal-s-islands-of.jpg?w=600&h=400&s=1"));
-        trips.add(new Trip(UUID.randomUUID(), "Seville", "Madrid", new BigDecimal(400), LocalDate.of(2023, 1, 1), LocalDate.of(2023, 2, 1), false, "https://www.easyjet.com/ejcms/cache/medialibrary/Images/JSS/Destinations/Hero/Spain_Madrid_3840x2160.jpg?mw=1920&hash=E8335D1B8641F2150C395A3EC48BA45CC0B5BA6D"));
-        trips.add(new Trip(UUID.randomUUID(), "Barquisimeto", "Caracas", new BigDecimal(100), LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1, 3), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fe/d4/caracas.jpg?w=700&h=500&s=1"));
-        trips.add(new Trip(UUID.randomUUID(), "Madrid", "Barcelona", new BigDecimal(50), LocalDate.of(2023, 2, 3), LocalDate.of(2023, 2, 4), false, "https://media.cntraveler.com/photos/5a985924d41cc84048ce6db0/master/w_4348,h_3261,c_limit/Catedral-de-Barcelona-GettyImages-511874340.jpg"));
-        trips.add(new Trip(UUID.randomUUID(), "Valencia", "Sevilla", new BigDecimal(56), LocalDate.of(2023, 4, 10), LocalDate.of(2023, 4, 13), false, "https://www.lavanguardia.com/files/content_image_mobile_filter/files/fp/uploads/2019/09/30/5fa52ff369941.r_d.328-221.jpeg"));
-        trips.add(new Trip(UUID.randomUUID(), "Quito", "Amsterdam", new BigDecimal(500), LocalDate.of(2022, 7, 1), LocalDate.of(2022, 7, 18), false, "https://www.guruwalk.com/blog/wp-content/uploads/2019/10/what-to-do-see-amsterdam.jpg"));
+        trips.add(new Trip(random.nextInt(),"Miami", "Orlando", 200.20, LocalDate.of(2022, 05, 10), LocalDate.of(2022, 10, 14), false, "https://www.barcelo.com/guia-turismo/wp-content/uploads/2021/12/fin-de-semana-madrid-pal-3.jpg"));
+        trips.add(new Trip(random.nextInt(), "Seville", "Madrid", 400.40, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 2, 1), false, "http://png.pngtree.com/element_pic/17/04/20/e29789b631107bd82df67d3f46112f0e.jpg"));
+        trips.add(new Trip(random.nextInt(), "Barquisimeto", "Caracas", 100.60, LocalDate.of(2023, 1, 1), LocalDate.of(2023, 1, 3), false, "http://png.pngtree.com/element_pic/16/09/12/2357d6c812acf90.jpg"));
+        trips.add(new Trip(random.nextInt(), "Madrid", "Barcelona", 50.30, LocalDate.of(2023, 2, 3), LocalDate.of(2023, 2, 4), false, "http://png.pngtree.com/element_pic/20/16/01/3156adb71123719.jpg"));
+        trips.add(new Trip(random.nextInt(), "Valencia", "Sevilla", 56.15, LocalDate.of(2023, 4, 10), LocalDate.of(2023, 4, 13), false, "http://png.pngtree.com/element_pic/30/03/20/1656fbd4b4641fc.jpg"));
+        trips.add(new Trip(random.nextInt(), "Quito", "Amsterdam", 500.30, LocalDate.of(2022, 7, 1), LocalDate.of(2022, 7, 18), false, "http://png.pngtree.com/element_pic/00/00/00/0056a3602a2cf41.jpg"));
 
         return trips;
     }

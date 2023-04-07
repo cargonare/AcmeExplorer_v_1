@@ -1,8 +1,5 @@
 package com.example.acmeexplorer_v_1;
 
-
-import static com.example.acmeexplorer_v_1.Utils.dateFormatter;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,21 +34,18 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
 
         Trip trip = (Trip) getIntent().getSerializableExtra("selected_trip");
 
-        //Picasso.with(this).load(trip.getImageUrl()).into(ivImage);
-        tvStartCity.setText("Sale desde: " + trip.getStartCity());
-        tvEndCity.setText(trip.getEndCity());
-        tvStartDate.setText("Fecha de Ida: " + trip.getStartDate().format(dateFormatter));
-        tvEndDate.setText("Fecha de Vuelta: " + trip.getEndDate().format(dateFormatter));
-        tvPrice.setText(trip.getPrice() + "€");
+        tvStartCity.setText("Sale desde: " + trip.getCiudadProcedencia());
+        tvEndCity.setText(trip.getCiudadDestino());
+        tvStartDate.setText("Fecha de Ida: " + trip.getFechaIda());
+        tvEndDate.setText("Fecha de Vuelta: " + trip.getFechaVuelta());
+        tvPrice.setText(trip.getPrecio() + "€");
 
-        if(trip.getSelected()) {
-            ivIcon.setImageResource(R.drawable.ic_selected);
+        if(trip.getSeleccionar()) {
+            ivIcon.setImageResource(R.drawable.green_tick);
         } else {
-            ivIcon.setImageResource(R.drawable.ic_not_selected);
+            ivIcon.setImageResource(R.drawable.red_cross);
         }
+
     }
 
-    public void buyTrip(View view) {
-        Snackbar.make(view, "Buy logic goes here", Snackbar.LENGTH_SHORT).show();
-    }
 }

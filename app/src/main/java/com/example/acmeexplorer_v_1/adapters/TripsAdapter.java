@@ -1,8 +1,6 @@
 package com.example.acmeexplorer_v_1.adapters;
 
 
-import static com.example.acmeexplorer_v_1.Utils.dateFormatter;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +11,19 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.bumptech.glide.Glide;
 import com.example.acmeexplorer_v_1.R;
 import com.example.acmeexplorer_v_1.models.Trip;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> {
-    private ArrayList<Trip> localDataSet;
+    private ArrayList<Trip> initialData;
     private OnTripListener mOnTripListener;
 
-    public TripsAdapter(ArrayList<Trip> dataSet, OnTripListener onTripListener) {
-        this.localDataSet = dataSet;
+    public TripsAdapter(ArrayList<Trip> initialData, OnTripListener onTripListener) {
+        this.initialData = initialData;
         this.mOnTripListener = onTripListener;
     }
 
@@ -35,7 +35,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return localDataSet.size();
+        return initialData.size();
     }
 
     @Override
@@ -48,20 +48,21 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        Trip trip = localDataSet.get(position);
+        Trip trip = initialData.get(position);
 
         viewHolder.bindView(position, mOnTripListener);
 
-        //Picasso.with(viewHolder.itemView.getContext()).load(trip.getImageUrl()).placeholder(R.drawable.ic_placeholder).error(R.drawable.ic_error).into(viewHolder.getImageView());
-        viewHolder.getTextViewCities().setText(trip.getStartCity() + " - " + trip.getEndCity());
-        viewHolder.getTextViewPrice().setText(trip.getPrice().toString() + "€");
-        viewHolder.getTextViewDates().setText(trip.getStartDate().format(dateFormatter) + " - " + trip.getEndDate().format(dateFormatter));
-        viewHolder.getSelectedIcon().setImageResource(trip.getSelected() ? R.drawable.ic_selected : R.drawable.ic_not_selected);
+        Glide.with(viewHolder.itemView.getContext()).load(trip.getUrlImagenes()).into(viewHolder.getImageView());
+        viewHolder.getTextViewCities().setText(trip.getCiudadDestino());
+        viewHolder.getTextViewPrice().setText(String.valueOf(trip.getPrecio()) + "€");
+        viewHolder.getTextViewDates().setText("Salida: " + trip.getFechaIda());
+        viewHolder.getTextViewDatesBack().setText("Llegada: " + trip.getFechaVuelta());
+        viewHolder.getSelectedIcon().setImageResource(trip.getSeleccionar() ? R.drawable.green_tick : R.drawable.red_cross);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final ImageView imageView, selectedIcon;
-        private final TextView textViewCities, textViewPrice, textViewDates;
+        private final TextView textViewCities, textViewPrice, textViewDates, textViewDatesBack;
 
         OnTripListener onTripListener;
 
@@ -75,6 +76,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             textViewCities = view.findViewById(R.id.trip_cities);
             textViewPrice = view.findViewById(R.id.trip_price);
             textViewDates = view.findViewById(R.id.trip_dates);
+            textViewDatesBack = view.findViewById(R.id.trip_dates_back);
 
             view.setOnClickListener(this);
         }
@@ -106,6 +108,9 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 
         public TextView getTextViewDates() {
             return textViewDates;
+        }
+        public TextView getTextViewDatesBack() {
+            return textViewDatesBack;
         }
     }
 }

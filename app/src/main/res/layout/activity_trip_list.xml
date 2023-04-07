@@ -19,6 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Filtrar"
+            android:drawableLeft="@drawable/ic_search"
             android:layout_weight="1"
             android:layout_marginEnd="10dp"/>
 
@@ -26,7 +27,7 @@
             android:id="@+id/switchCols"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:text="orientación"
+            android:text="Columnas"
             android:layout_weight="1"
             android:textSize="18sp"
             android:textStyle="bold"

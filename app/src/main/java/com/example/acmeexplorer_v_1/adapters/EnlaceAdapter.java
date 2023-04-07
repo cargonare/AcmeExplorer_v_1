@@ -50,7 +50,7 @@ public class EnlaceAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.menu_item, viewGroup, false);
         }
 
-        CardView cardView = view.findViewById(R.id.cvMenuItem);
+        CardView cardView = view.findViewById(R.id.cardView);
         ImageView imageView = view.findViewById(R.id.trip_image);
         TextView textView = view.findViewById(R.id.trip_cities);
 
