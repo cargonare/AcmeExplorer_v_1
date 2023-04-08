@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
@@ -76,25 +77,24 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
                 sharedPreferences.edit().putBoolean("trips-generated", true).apply();
             } else {
                 String tripsJsonString = sharedPreferences.getString("trip-data", "");
-                ArrayList<Trip> tripsRecuperados = new ArrayList<>();
-                if (!tripsJsonString.equals("")) {
-                    JSONArray jsonArray = new JSONArray(tripsJsonString);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                List<Trip> tripsRecuperados=new ArrayList<>();
+                String[] viajes = tripsJsonString.split(";");
+                    for (String viaje : viajes) {
+                        String[] valoresViaje = viaje.split(",");
                         Trip tripRecuperado = new Trip();
-                        tripRecuperado.setId(jsonObject.getInt("id"));
-                        tripRecuperado.setCiudadProcedencia(jsonObject.getString("ciudadProcedencia"));
-                        tripRecuperado.setCiudadDestino(jsonObject.getString("ciudadDestino"));
-                        tripRecuperado.setPrecio(jsonObject.getDouble("precio"));
-                        tripRecuperado.setFechaIda(LocalDate.parse(jsonObject.getString("fechaIda")));
-                        tripRecuperado.setFechaVuelta(LocalDate.parse(jsonObject.getString("fechaVuelta")));
-                        tripRecuperado.setSeleccionar(jsonObject.getBoolean("seleccionar"));
-                        tripRecuperado.setUrlImagenes(jsonObject.getString("urlImagenes"));
+                        tripRecuperado.setId(Integer.parseInt(valoresViaje[0]));
+                        tripRecuperado.setCiudadProcedencia(valoresViaje[1]);
+                        tripRecuperado.setCiudadDestino(valoresViaje[2]);
+                        tripRecuperado.setPrecio(Double.parseDouble(valoresViaje[3]));
+                        tripRecuperado.setFechaIda(LocalDate.parse(valoresViaje[4]));
+                        tripRecuperado.setFechaVuelta(LocalDate.parse(valoresViaje[5]));
+                        tripRecuperado.setSeleccionar(Boolean.parseBoolean(valoresViaje[6]));
+                        tripRecuperado.setUrlImagenes(valoresViaje[7]);
+
                         tripsRecuperados.add(tripRecuperado);
-                        System.out.println(tripsRecuperados);
                     }
-                    trips=tripsRecuperados;
-                }
+                trips.clear();
+                trips.addAll(tripsRecuperados);
             }
 
 
