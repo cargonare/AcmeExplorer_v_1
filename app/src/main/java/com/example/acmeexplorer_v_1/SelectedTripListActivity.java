@@ -38,7 +38,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         try {
             sharedPreferences = getSharedPreferences("com.example.acmeexplorer_v_1", MODE_PRIVATE);
-            String json = sharedPreferences.getString("selected-trip-data", "{}");
+            String json = sharedPreferences.getString("selected-trip", "{}");
             String trips_json = sharedPreferences.getString("trip-data", "{}");
 
             selectedTrips = new ArrayList<>();
@@ -58,6 +58,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
                     String urlImagenes = jsonObject.getString("urlImagenes");
                     Trip trip = new Trip(id, ciudadProcedencia, ciudadDestino, precio, fechaIda, fechaVuelta, seleccionar, urlImagenes);
                     selectedTrips.add(trip);
+                    System.out.println("selected" + trip);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -106,7 +107,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     public void onSelectTrip(int position) {
         Trip selectTrip = selectedTrips.get(position);
 
-        //selectTrip.setSeleccionar(true);
+        selectTrip.setSeleccionar(false);
 
         for(int i = 0; i < trips.size(); i++) {
             if(trips.get(i).getId()==selectTrip.getId()){
@@ -115,7 +116,6 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         }
 
         selectedTrips.remove(selectTrip);
-
         JSONArray tripsJsonArray = new JSONArray();
         for (Trip trip : trips) {
             try {
@@ -133,7 +133,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
                 e.printStackTrace();
             }
         }
-        String tripsJsonString = tripsJsonArray.toString();
+
+        sharedPreferences.edit().putString("trip-data", tripsJsonArray.toString()).apply();
 
         JSONArray selectedTripsJsonArray = new JSONArray();
         for (Trip selectedTrip : selectedTrips) {
@@ -148,14 +149,13 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
                 selectedTripJsonObj.put("seleccionar", selectedTrip.getSeleccionar());
                 selectedTripJsonObj.put("urlImagenes", selectedTrip.getUrlImagenes());
                 selectedTripsJsonArray.put(selectedTripJsonObj);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        String selectedTripsJsonString = selectedTripsJsonArray.toString();
 
-        sharedPreferences.edit().putString("trip-data", tripsJsonString).apply();
-        sharedPreferences.edit().putString("selected-trip-data", selectedTripsJsonString).apply();
+        sharedPreferences.edit().putString("selected-trip", selectedTripsJsonArray.toString()).apply();
 
         tripsAdapter.notifyDataSetChanged();
 
