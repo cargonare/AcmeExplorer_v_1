@@ -52,8 +52,8 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         viewHolder.bindView(position, mOnTripListener);
 
         Glide.with(viewHolder.itemView.getContext()).load(trip.getUrlImagenes()).into(viewHolder.getImageView());
-        viewHolder.getTextViewCities().setText(trip.getCiudadDestino());
-        viewHolder.getTextViewPrice().setText(String.valueOf(trip.getPrecio()) + "€");
+        viewHolder.getTextViewCities().setText("Ciudad: " + trip.getCiudadDestino());
+        viewHolder.getTextViewPrice().setText("Precio: " + String.valueOf(trip.getPrecio()) + "€");
         viewHolder.getTextViewDates().setText("Salida: " + trip.getFechaIda());
         viewHolder.getTextViewDatesBack().setText("Llegada: " + trip.getFechaVuelta());
         viewHolder.getSelectedIcon().setImageResource(trip.getSeleccionar() ? R.drawable.green_tick : R.drawable.red_cross);

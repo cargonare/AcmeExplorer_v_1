@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.acmeexplorer_v_1.models.Trip;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -30,6 +31,7 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
 
         Trip trip = (Trip) getIntent().getSerializableExtra("selected_trip");
 
+        Glide.with(this).load(trip.getUrlImagenes()).into(ivImage);
         tvStartCity.setText("Sale desde: " + trip.getCiudadProcedencia());
         tvEndCity.setText(trip.getCiudadDestino());
         tvStartDate.setText("Fecha de Ida: " + trip.getFechaIda());
@@ -46,6 +48,10 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
 
     public void comprarTicket(View view){
         Snackbar.make(view, "Has comprado un viaje seleccionado", Snackbar.LENGTH_SHORT).show();
+        Snackbar snackbar = Snackbar.make(view, "Has comprado el viaje seleccionado", Snackbar.LENGTH_SHORT);
+        View snackbarView = snackbar.getView();
+        snackbarView.setElevation(100);
+        snackbar.show();
     }
 
 }
