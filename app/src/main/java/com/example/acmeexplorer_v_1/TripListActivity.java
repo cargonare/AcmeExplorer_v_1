@@ -27,7 +27,6 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -141,10 +140,12 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
             trips=Trip.generarViajes();
 
+            System.out.println("trips " + trips);
             for(Trip viajes:selectedTrips){
                 for(Trip trip:trips){
                     if(viajes.getCiudadDestino().equals(trip.getCiudadDestino())){
                         trip.setSeleccionar(true);
+                        trip.setId(viajes.getId());
                     }
                 }
             }

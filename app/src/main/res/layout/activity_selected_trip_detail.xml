@@ -79,6 +79,14 @@
             android:orientation="horizontal"
             >
 
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comprar"
+                android:onClick="comprarTicket"
+                android:layout_weight="0.90"/>
+
             <ImageView
                 android:id="@+id/ivSelectedIcon"
                 android:layout_width="50sp"

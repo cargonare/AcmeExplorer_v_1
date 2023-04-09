@@ -3,19 +3,12 @@ package com.example.acmeexplorer_v_1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.squareup.picasso.Picasso;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 public class TripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;

@@ -10,10 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.acmeexplorer_v_1.models.Trip;
 import com.google.android.material.snackbar.Snackbar;
 
-import com.squareup.picasso.Picasso;
-
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 
 public class SelectedTripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;
@@ -46,6 +42,10 @@ public class SelectedTripDetailActivity extends AppCompatActivity {
             ivIcon.setImageResource(R.drawable.red_cross);
         }
 
+    }
+
+    public void comprarTicket(View view){
+        Snackbar.make(view, "Has comprado un viaje seleccionado", Snackbar.LENGTH_SHORT).show();
     }
 
 }

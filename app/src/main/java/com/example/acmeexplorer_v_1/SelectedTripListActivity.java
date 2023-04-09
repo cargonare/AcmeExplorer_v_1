@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.acmeexplorer_v_1.adapters.TripsAdapter;
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +26,6 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     private TripsAdapter tripsAdapter;
 
     SharedPreferences sharedPreferences;
-    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
