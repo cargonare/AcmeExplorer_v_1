@@ -34,7 +34,7 @@ public class TripDetailActivity extends AppCompatActivity {
         tvEndCity.setText(trip.getCiudadDestino());
         tvStartDate.setText("Fecha de Ida: " + trip.getFechaIda());
         tvEndDate.setText("Fecha de Vuelta: " + trip.getFechaVuelta());
-        tvPrice.setText(trip.getPrecio() + "€");
+        tvPrice.setText("Precio: " + trip.getPrecio() + "€");
 
         if(trip.getSeleccionar()) {
             ivIcon.setImageResource(R.drawable.green_tick);
