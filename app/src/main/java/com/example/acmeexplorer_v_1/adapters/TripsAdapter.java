@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.acmeexplorer_v_1.R;
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
