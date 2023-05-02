@@ -9,4 +9,22 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="login_email_et_hint">Correo electrónico</string>
+    <string name="login_password_et_hint">Contraseña</string>
+    <string name="login_button_mail_text">Acceder</string>
+    <string name="login_button_google_text">Acceder con google</string>
+    <string name="login_button_register_text">Registrar</string>
+
+    <string name="login_email_error_1">Por favor introduzca un correo electrónico.</string>
+    <string name="login_email_error_2">Por favor introduzca una contraseña</string>
+    <string name="login_mail_access_error">Se ha producido un error al acceder</string>
+    <string name="login_verified_mail_error">Verifica tu correo</string>
+    <string name="login_verified_mail_ok">Enviar correo</string>
+    <string name="login_verified_mail_error_sent">Correo de verificación enviado</string>
+    <string name="login_verified_mail_error_no_sent">No se ha podido enviar el correo de verificación</string>
+    <string name="login_verified_mail_error_cancel">Cancelar</string>
+    <string name="login_google_play_services_error">Debes Actualizar Google Play Services antes de continuar</string>
+    <string name="login_download_gps">Actualizar</string>
+    <string name="gps_download_url">market://details?id=com.google.android.gms</string>
+    <string name="market_download_url">https://play.google.com/store/apps/details?id=com.google.android.gms</string>
 </resources>
