@@ -1,6 +1,8 @@
 package com.example.acmeexplorer_v_1;
 
 import com.example.acmeexplorer_v_1.models.Trip;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -22,6 +24,10 @@ public class Imports {
 
     public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 
+    public static Gson gson = new GsonBuilder()
+            .setPrettyPrinting()
+            .registerTypeAdapter(LocalDate.class, new LocalDateConverter())
+            .create();
     public static class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
         public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE.format(src));

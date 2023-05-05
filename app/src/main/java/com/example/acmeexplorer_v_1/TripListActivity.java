@@ -1,6 +1,7 @@
 package com.example.acmeexplorer_v_1;
 
 import static com.example.acmeexplorer_v_1.Imports.ArrayTrips;
+import static com.example.acmeexplorer_v_1.Imports.gson;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,8 +20,6 @@ import android.widget.Switch;
 import com.example.acmeexplorer_v_1.adapters.TripsAdapter;
 import com.example.acmeexplorer_v_1.models.Trip;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,7 +35,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private RecyclerView rvTripList;
 
     SharedPreferences sharedPreferences;
-    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +49,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
             sharedPreferences = getSharedPreferences("com.example.acmeexplorer_v_1", MODE_PRIVATE);
             String trips_json = sharedPreferences.getString("trip-data", "{}");
             String selected_trips_json = sharedPreferences.getString("selected-trip-data", "{}");
-
-            gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(LocalDate.class, new Imports.LocalDateConverter())
-                    .create();
 
             if (trips_json == "{}") {
                 trips = Trip.generarViajes();

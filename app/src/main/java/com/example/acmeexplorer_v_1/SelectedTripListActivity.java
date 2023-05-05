@@ -2,6 +2,7 @@ package com.example.acmeexplorer_v_1;
 
 
 import static com.example.acmeexplorer_v_1.Imports.ArrayTrips;
+import static com.example.acmeexplorer_v_1.Imports.gson;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.acmeexplorer_v_1.adapters.TripsAdapter;
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
@@ -25,7 +25,6 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     private TripsAdapter tripsAdapter;
 
     SharedPreferences sharedPreferences;
-    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +35,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         try {
             sharedPreferences = getSharedPreferences("com.example.acmeexplorer_v_1", MODE_PRIVATE);
-//            sharedPreferences.edit().clear().commit();
             String json = sharedPreferences.getString("selected-trip-data", "{}");
             String trips_json = sharedPreferences.getString("trip-data", "{}");
-
-            gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(LocalDate.class, new Imports.LocalDateConverter())
-                    .create();
 
             selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, ArrayTrips);
 
