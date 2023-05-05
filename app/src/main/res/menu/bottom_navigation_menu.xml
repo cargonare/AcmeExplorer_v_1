@@ -4,10 +4,10 @@
         android:id="@+id/page_menu"
         android:enabled="true"
         android:icon="@drawable/ic_search"
-        android:title="menu"/>
+        android:title="Menú principal"/>
     <item
         android:id="@+id/page_profile"
         android:enabled="true"
         android:icon="@drawable/ic_auth"
-        android:title="profile"/>
+        android:title="Login"/>
 </menu>

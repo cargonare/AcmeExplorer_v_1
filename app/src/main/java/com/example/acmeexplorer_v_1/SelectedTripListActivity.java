@@ -1,6 +1,8 @@
 package com.example.acmeexplorer_v_1;
 
 
+import static com.example.acmeexplorer_v_1.Imports.ArrayTrips;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.acmeexplorer_v_1.adapters.TripsAdapter;
 import com.example.acmeexplorer_v_1.models.Trip;
-
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
     private TripsAdapter tripsAdapter;
 
     SharedPreferences sharedPreferences;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,56 +36,23 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
         try {
             sharedPreferences = getSharedPreferences("com.example.acmeexplorer_v_1", MODE_PRIVATE);
-            String json = sharedPreferences.getString("selected-trip", "{}");
+//            sharedPreferences.edit().clear().commit();
+            String json = sharedPreferences.getString("selected-trip-data", "{}");
             String trips_json = sharedPreferences.getString("trip-data", "{}");
 
-            selectedTrips = new ArrayList<>();
-            try {
-                JSONArray jsonArray = new JSONArray(json);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    int id = jsonObject.getInt("id");
-                    String ciudadProcedencia = jsonObject.getString("ciudadProcedencia");
-                    String ciudadDestino = jsonObject.getString("ciudadDestino");
-                    Double precio = jsonObject.getDouble("precio");
-                    String fechaIdaStr = jsonObject.getString("fechaIda");
-                    LocalDate fechaIda = LocalDate.parse(fechaIdaStr);
-                    String fechaVueltaStr = jsonObject.getString("fechaVuelta");
-                    LocalDate fechaVuelta = LocalDate.parse(fechaVueltaStr);
-                    Boolean seleccionar = jsonObject.getBoolean("seleccionar");
-                    String urlImagenes = jsonObject.getString("urlImagenes");
-                    Trip trip = new Trip(id, ciudadProcedencia, ciudadDestino, precio, fechaIda, fechaVuelta, seleccionar, urlImagenes);
-                    selectedTrips.add(trip);
-                    System.out.println("selected" + trip);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .registerTypeAdapter(LocalDate.class, new Imports.LocalDateConverter())
+                    .create();
 
-            trips = new ArrayList<>();
-            try {
-                JSONArray jsonArray = new JSONArray(trips_json);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    int id = jsonObject.getInt("id");
-                    String ciudadProcedencia = jsonObject.getString("ciudadProcedencia");
-                    String ciudadDestino = jsonObject.getString("ciudadDestino");
-                    Double precio = jsonObject.getDouble("precio");
-                    String fechaIdaStr = jsonObject.getString("fechaIda");
-                    LocalDate fechaIda = LocalDate.parse(fechaIdaStr);
-                    String fechaVueltaStr = jsonObject.getString("fechaVuelta");
-                    LocalDate fechaVuelta = LocalDate.parse(fechaVueltaStr);
-                    Boolean seleccionar = jsonObject.getBoolean("seleccionar");
-                    String urlImagenes = jsonObject.getString("urlImagenes");
-                    Trip trip = new Trip(id, ciudadProcedencia, ciudadDestino, precio, fechaIda, fechaVuelta, seleccionar, urlImagenes);
-                    trips.add(trip);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, ArrayTrips);
+
+            if (trips_json != "{}") {
+                trips = gson.fromJson(trips_json, ArrayTrips);
             }
         } catch (Exception e) {
-        }
 
+        }
 
         tripsAdapter = new TripsAdapter(selectedTrips, this);
         rvSelectedTripList.setAdapter(tripsAdapter);
@@ -103,59 +70,21 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
     @Override
     public void onSelectTrip(int position) {
-        Trip selectTrip = selectedTrips.get(position);
+        Trip selectedTrip = selectedTrips.get(position);
 
-        selectTrip.setSeleccionar(false);
+        selectedTrip.setSeleccionar(false);
 
         for(int i = 0; i < trips.size(); i++) {
-            if(trips.get(i).getId()==selectTrip.getId()){
+            if(trips.get(i).getId()==selectedTrip.getId()){
                 trips.get(i).setSeleccionar(false);
             }
         }
 
-        selectedTrips.remove(selectTrip);
-        JSONArray tripsJsonArray = new JSONArray();
-        for (Trip trip : trips) {
-            try {
-                JSONObject tripJsonObj = new JSONObject();
-                tripJsonObj.put("id", trip.getId());
-                tripJsonObj.put("ciudadProcedencia", trip.getCiudadProcedencia());
-                tripJsonObj.put("ciudadDestino", trip.getCiudadDestino());
-                tripJsonObj.put("precio", trip.getPrecio());
-                tripJsonObj.put("fechaIda", trip.getFechaIda().toString());
-                tripJsonObj.put("fechaVuelta", trip.getFechaVuelta().toString());
-                tripJsonObj.put("seleccionar", trip.getSeleccionar());
-                tripJsonObj.put("urlImagenes", trip.getUrlImagenes());
-                tripsJsonArray.put(tripJsonObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        selectedTrips.remove(selectedTrip);
 
-        sharedPreferences.edit().putString("trip-data", tripsJsonArray.toString()).apply();
-
-        JSONArray selectedTripsJsonArray = new JSONArray();
-        for (Trip selectedTrip : selectedTrips) {
-            try {
-                JSONObject selectedTripJsonObj = new JSONObject();
-                selectedTripJsonObj.put("id", selectedTrip.getId());
-                selectedTripJsonObj.put("ciudadProcedencia", selectedTrip.getCiudadProcedencia());
-                selectedTripJsonObj.put("ciudadDestino", selectedTrip.getCiudadDestino());
-                selectedTripJsonObj.put("precio", selectedTrip.getPrecio());
-                selectedTripJsonObj.put("fechaIda", selectedTrip.getFechaIda().toString());
-                selectedTripJsonObj.put("fechaVuelta", selectedTrip.getFechaVuelta().toString());
-                selectedTripJsonObj.put("seleccionar", selectedTrip.getSeleccionar());
-                selectedTripJsonObj.put("urlImagenes", selectedTrip.getUrlImagenes());
-                selectedTripsJsonArray.put(selectedTripJsonObj);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        sharedPreferences.edit().putString("selected-trip", selectedTripsJsonArray.toString()).apply();
+        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
+        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
 
         tripsAdapter.notifyDataSetChanged();
-
     }
 }
