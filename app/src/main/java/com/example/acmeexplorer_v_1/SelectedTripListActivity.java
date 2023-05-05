@@ -34,9 +34,9 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
 
         try {
-            sharedPreferences = getSharedPreferences("com.example.acmeexplorer_v_1", MODE_PRIVATE);
-            String json = sharedPreferences.getString("selected-trip-data", "{}");
-            String trips_json = sharedPreferences.getString("trip-data", "{}");
+            sharedPreferences = getSharedPreferences("cargonare1", MODE_PRIVATE);
+            String json = sharedPreferences.getString("list_selected", "{}");
+            String trips_json = sharedPreferences.getString("list_trip", "{}");
 
             selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, ArrayTrips);
 
@@ -68,15 +68,16 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         selectedTrip.setSeleccionar(false);
 
         for(int i = 0; i < trips.size(); i++) {
-            if(trips.get(i).getId()==selectedTrip.getId()){
+            Trip trip = trips.get(i);
+            if(trip.equals(selectedTrip)){
                 trips.get(i).setSeleccionar(false);
             }
         }
 
         selectedTrips.remove(selectedTrip);
 
-        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
-        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
+        sharedPreferences.edit().putString("list_selected", gson.toJson(selectedTrips)).apply();
+        sharedPreferences.edit().putString("list_trip", gson.toJson(trips)).apply();
 
         tripsAdapter.notifyDataSetChanged();
     }

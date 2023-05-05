@@ -46,13 +46,13 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         filterButton = findViewById(R.id.filterButton);
 
         try {
-            sharedPreferences = getSharedPreferences("com.example.acmeexplorer_v_1", MODE_PRIVATE);
-            String trips_json = sharedPreferences.getString("trip-data", "{}");
-            String selected_trips_json = sharedPreferences.getString("selected-trip-data", "{}");
+            sharedPreferences = getSharedPreferences("cargonare1", MODE_PRIVATE);
+            String trips_json = sharedPreferences.getString("list_trip", "{}");
+            String selected_trips_json = sharedPreferences.getString("list_selected", "{}");
 
             if (trips_json == "{}") {
                 trips = Trip.generarViajes();
-                sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
+                sharedPreferences.edit().putString("list_trip", gson.toJson(trips)).apply();
             } else {
                 trips = gson.fromJson(trips_json, ArrayTrips);
             }
@@ -136,14 +136,14 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
             System.out.println(selectedTrips);
         } else {
             for (int i = 0; i < selectedTrips.size(); i++) {
-                if (selectedTrips.get(i).getId()==(trip.getId())) {
+                if (selectedTrips.get(i).equals(trip)) {
                     selectedTrips.remove(i);
                 }
             }
         }
 
-        sharedPreferences.edit().putString("trip-data", gson.toJson(trips)).apply();
-        sharedPreferences.edit().putString("selected-trip-data", gson.toJson(selectedTrips)).apply();
+        sharedPreferences.edit().putString("list_trip", gson.toJson(trips)).apply();
+        sharedPreferences.edit().putString("list_selected", gson.toJson(selectedTrips)).apply();
         tripsAdapter.notifyDataSetChanged();
     }
 
