@@ -1,7 +1,5 @@
 package com.example.acmeexplorer_v_1;
 
-import static com.example.acmeexplorer_v_1.Imports.ArrayTrips;
-import static com.example.acmeexplorer_v_1.Imports.gson;
 import static com.example.acmeexplorer_v_1.Imports.transformarFecha;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -12,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.widget.Button;
@@ -21,14 +18,18 @@ import android.widget.Switch;
 import com.example.acmeexplorer_v_1.adapters.TripsAdapter;
 import com.example.acmeexplorer_v_1.models.Trip;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
+
+    private FirestoreService firestoreService;
+    private GridLayoutManager gridLayoutManager;
+
     private ArrayList<Trip> trips = new ArrayList<>();
-    private ArrayList<Trip> selectedTrips = new ArrayList<>();
     private ArrayList<Trip> filteredTrips = new ArrayList<>();
 
     private Switch switchColumns;
@@ -36,40 +37,34 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     private TripsAdapter tripsAdapter;
     private RecyclerView rvTripList;
 
-    SharedPreferences sharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_list);
 
+        firestoreService = FirestoreService.getServiceInstance();
+
         rvTripList = findViewById(R.id.rvTripList);
         switchColumns = findViewById(R.id.switchCols);
         filterButton = findViewById(R.id.filterButton);
 
-        try {
-            sharedPreferences = getSharedPreferences("cargonare1", MODE_PRIVATE);
-            String trips_json = sharedPreferences.getString("list_trip", "{}");
-            String selected_trips_json = sharedPreferences.getString("list_selected", "{}");
-
-            if (trips_json == "{}") {
-                trips = Trip.generarViajes();
-                sharedPreferences.edit().putString("list_trip", gson.toJson(trips)).apply();
-            } else {
-                trips = gson.fromJson(trips_json, ArrayTrips);
-            }
-
-            selectedTrips = selected_trips_json == "{}" ? new ArrayList<>() : gson.fromJson(selected_trips_json, ArrayTrips);
-        } catch (Exception e) {
-
-        }
-
-
         tripsAdapter = new TripsAdapter(trips, this);
         rvTripList.setAdapter(tripsAdapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        gridLayoutManager = new GridLayoutManager(this, 1);
         rvTripList.setLayoutManager(gridLayoutManager);
+
+        firestoreService.getTrips().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
+            for(DocumentSnapshot snapshot: documentSnapshotList){
+                Trip trip = snapshot.toObject(Trip.class);
+                trip.setId(snapshot.getId());
+                trips.add(trip);
+            }
+            tripsAdapter.notifyDataSetChanged();
+            System.out.println("lista final trips" + trips);
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
 
         switchColumns.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isChecked()) {
@@ -99,12 +94,11 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
                     for (int i = 0; i < trips.size(); i++) {
                         Trip trip = trips.get(i);
 
-                        Boolean validMinPrice = trip.getPrecio().compareTo(filterMinPrice) >= 0;
-                        Boolean validMaxPrice = trip.getPrecio().compareTo(filterMaxPrice) <= 0;
+                        Boolean validMinPrice = trip.getPrecio() >= filterMinPrice;
+                        Boolean validMaxPrice = trip.getPrecio() <= filterMaxPrice;
 
-                        Boolean validStartDate = trip.getFechaIda().compareTo(filterMinDate) > 0|| trip.getFechaIda().compareTo(filterMinDate) == 0;
-                        Boolean validEndDate = trip.getFechaVuelta().compareTo(filterMaxDate) < 0 || trip.getFechaVuelta().compareTo(filterMaxDate) == 0;
-
+                        Boolean validStartDate = trip.getFechaIda().compareTo(filterMinDate) > 0 || trip.getFechaIda().compareTo(filterMinDate) == 0;
+                        Boolean validEndDate = trip.getFechaIda().compareTo(filterMaxDate) < 0 || trip.getFechaIda().compareTo(filterMaxDate) == 0;
 
                         if ((validMinPrice && validMaxPrice) || (validStartDate && validEndDate)) {
                             filteredTrips.add(trip);
@@ -131,22 +125,13 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
     @Override
     public void onSelectTrip(int position) {
         Trip trip = trips.get(position);
+
         trip.setSeleccionar(!trip.getSeleccionar());
-
-        if (trip.getSeleccionar()) {
-            selectedTrips.add(trip);
-            System.out.println(selectedTrips);
-        } else {
-            for (int i = 0; i < selectedTrips.size(); i++) {
-                if (selectedTrips.get(i).equals(trip)) {
-                    selectedTrips.remove(i);
-                }
-            }
-        }
-
-        sharedPreferences.edit().putString("list_trip", gson.toJson(trips)).apply();
-        sharedPreferences.edit().putString("list_selected", gson.toJson(selectedTrips)).apply();
-        tripsAdapter.notifyDataSetChanged();
+        firestoreService.selectTrip(trip.getId(), trip.getSeleccionar()).addOnSuccessListener(queryDocumentSnapshots -> {
+            Snackbar.make(rvTripList, "Success!", Snackbar.LENGTH_SHORT).show();
+            tripsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
     }
-
 }

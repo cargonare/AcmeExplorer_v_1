@@ -1,12 +1,8 @@
 package com.example.acmeexplorer_v_1;
 
-
-import static com.example.acmeexplorer_v_1.Imports.ArrayTrips;
-import static com.example.acmeexplorer_v_1.Imports.gson;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,44 +10,47 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.acmeexplorer_v_1.adapters.TripsAdapter;
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.google.gson.GsonBuilder;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelectedTripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
-    private ArrayList<Trip> trips;
-    private ArrayList<Trip> selectedTrips;
-    private TripsAdapter tripsAdapter;
+    private FirestoreService firestoreService;
+    private ArrayList<Trip> selectedTrips = new ArrayList<>();
 
-    SharedPreferences sharedPreferences;
+    private TripsAdapter selectedTripsAdapter;
+    private GridLayoutManager gridLayoutManager;
+
+    private RecyclerView rvSelectedTripList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected_trip_list);
 
-        RecyclerView rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
+        firestoreService = FirestoreService.getServiceInstance();
 
-        try {
-            sharedPreferences = getSharedPreferences("cargonare1", MODE_PRIVATE);
-            String json = sharedPreferences.getString("list_selected", "{}");
-            String trips_json = sharedPreferences.getString("list_trip", "{}");
-
-            selectedTrips = json == "{}" ? new ArrayList<>() : gson.fromJson(json, ArrayTrips);
-
-            if (trips_json != "{}") {
-                trips = gson.fromJson(trips_json, ArrayTrips);
-            }
-        } catch (Exception e) {
-
-        }
-
-        tripsAdapter = new TripsAdapter(selectedTrips, this);
-        rvSelectedTripList.setAdapter(tripsAdapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        rvSelectedTripList = findViewById(R.id.rvSelectedTripList);
+        selectedTripsAdapter = new TripsAdapter(selectedTrips,this);
+        rvSelectedTripList.setAdapter(selectedTripsAdapter);
+        gridLayoutManager = new GridLayoutManager(this, 1);
         rvSelectedTripList.setLayoutManager(gridLayoutManager);
+
+        firestoreService.getSelectedTrips().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
+            for(DocumentSnapshot snapshot: documentSnapshotList){
+                Trip trip = snapshot.toObject(Trip.class);
+                trip.setId(snapshot.getId());
+                selectedTrips.add(trip);
+            }
+
+            Log.d("epic", selectedTrips.toString());
+            selectedTripsAdapter.notifyDataSetChanged();
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvSelectedTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -66,19 +65,14 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         Trip selectedTrip = selectedTrips.get(position);
 
         selectedTrip.setSeleccionar(false);
-
-        for(int i = 0; i < trips.size(); i++) {
-            Trip trip = trips.get(i);
-            if(trip.equals(selectedTrip)){
-                trips.get(i).setSeleccionar(false);
-            }
-        }
-
         selectedTrips.remove(selectedTrip);
 
-        sharedPreferences.edit().putString("list_selected", gson.toJson(selectedTrips)).apply();
-        sharedPreferences.edit().putString("list_trip", gson.toJson(trips)).apply();
-
-        tripsAdapter.notifyDataSetChanged();
+        firestoreService.selectTrip(selectedTrip.getId(), false).addOnSuccessListener(queryDocumentSnapshots -> {
+            Snackbar.make(rvSelectedTripList, "Unselect trip", Snackbar.LENGTH_SHORT).show();
+            selectedTripsAdapter.notifyItemRemoved(position);
+            selectedTripsAdapter.notifyItemRangeChanged(position, selectedTripsAdapter.getItemCount());
+        }).addOnFailureListener(e -> {
+            Snackbar.make(rvSelectedTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+        });
     }
 }

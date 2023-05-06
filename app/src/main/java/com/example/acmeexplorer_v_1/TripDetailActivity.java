@@ -39,8 +39,8 @@ public class TripDetailActivity extends AppCompatActivity {
         Glide.with(this).load(trip.getUrlImagenes()).into(ivImage);
         tvStartCity.setText("Sale desde: " + trip.getCiudadProcedencia());
         tvEndCity.setText(trip.getCiudadDestino());
-        tvStartDate.setText("Fecha de Ida: " + formatearFecha(trip.getFechaIda()));
-        tvEndDate.setText("Fecha de Vuelta: " + formatearFecha(trip.getFechaVuelta()));
+        tvStartDate.setText("Fecha de Ida: " + trip.getFechaIda());
+        tvEndDate.setText("Fecha de Vuelta: " + trip.getFechaVuelta());
         tvPrice.setText("Precio: " + trip.getPrecio() + "€");
 
         if(trip.getSeleccionar()) {

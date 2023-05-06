@@ -1,9 +1,6 @@
 package com.example.acmeexplorer_v_1.models;
 
-import static com.example.acmeexplorer_v_1.Imports.transformarFecha;
-
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;

@@ -1,8 +1,5 @@
 package com.example.acmeexplorer_v_1.adapters;
 
-
-import static com.example.acmeexplorer_v_1.Imports.formatearFecha;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +52,8 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         Glide.with(viewHolder.itemView.getContext()).load(trip.getUrlImagenes()).into(viewHolder.getImageView());
         viewHolder.getTextViewCities().setText("Ciudad: " + trip.getCiudadDestino());
         viewHolder.getTextViewPrice().setText("Precio: " + String.valueOf(trip.getPrecio()) + "€");
-        viewHolder.getTextViewDates().setText("Salida: " + formatearFecha(trip.getFechaIda()));
-        viewHolder.getTextViewDatesBack().setText("Llegada: " + formatearFecha(trip.getFechaVuelta()));
+        viewHolder.getTextViewDates().setText("Salida: " + trip.getFechaIda());
+        viewHolder.getTextViewDatesBack().setText("Llegada: " + trip.getFechaVuelta());
         viewHolder.getSelectedIcon().setImageResource(trip.getSeleccionar() ? R.drawable.green_tick : R.drawable.red_cross);
     }
 

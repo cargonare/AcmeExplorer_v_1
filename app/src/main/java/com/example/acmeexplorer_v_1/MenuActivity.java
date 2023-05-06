@@ -3,29 +3,19 @@ package com.example.acmeexplorer_v_1;
 import static com.example.acmeexplorer_v_1.Imports.transformarFecha;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.acmeexplorer_v_1.adapters.EnlaceAdapter;
 import com.example.acmeexplorer_v_1.models.Enlace;
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MenuActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private ArrayList<Enlace> enlace;
@@ -47,14 +37,13 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         lvMainMenu.setAdapter(adapter);
 
         FirestoreService firestoreService = FirestoreService.getServiceInstance();
-        firestoreService.saveTrip(new Trip("1", "Valencia", "Toledo", 200.57, transformarFecha("2023-01-01"), transformarFecha("2023-01-01"), false, "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fe/d4/caracas.jpg?w=700&h=500&s=1"), task -> {
+        firestoreService.saveTrip(new Trip("1", "Valencia", "Toledo", 200.57,transformarFecha("2023-05-10"), transformarFecha("2023-05-10"), false, "https://images.ecestaticos.com/Bow6KmixYLtlqWjT5pocMrJ1nyg=/0x0:2143x1399/1200x1200/filters:fill(white):format(jpg)/f.elconfidencial.com%2Foriginal%2F62d%2F269%2Fbf5%2F62d269bf590833e6db3b99007b2d8a74.jpg"), task -> {
             if (task.isSuccessful()){
                 Log.i("epic", "firestore almacenado completado: " + task.getResult().getId());
             } else {
                 Log.i("epic", "firestore almacenado fallado");
             }
         });
-
     }
 
     @Override
