@@ -56,8 +56,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
     @Override
     public void onTripClick(int position) {
-        Intent intent = new Intent(this, SelectedTripDetailActivity.class);
-        intent.putExtra("selected_trip", selectedTrips.get(position));
+        Intent intent = new Intent(this, TripDetailActivity.class);
+        intent.putExtra("trip", selectedTrips.get(position));
         startActivity(intent);
     }
 

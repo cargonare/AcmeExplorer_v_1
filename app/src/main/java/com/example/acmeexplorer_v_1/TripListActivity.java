@@ -2,6 +2,7 @@ package com.example.acmeexplorer_v_1;
 
 import static com.example.acmeexplorer_v_1.Imports.ArrayTrips;
 import static com.example.acmeexplorer_v_1.Imports.gson;
+import static com.example.acmeexplorer_v_1.Imports.transformarFecha;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,6 +24,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TripListActivity extends AppCompatActivity implements TripsAdapter.OnTripListener {
     private ArrayList<Trip> trips = new ArrayList<>();
@@ -91,8 +93,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
                     Double filterMinPrice = Double.parseDouble(data.getStringExtra("filterMinPrice"));
                     Double filterMaxPrice = Double.parseDouble(data.getStringExtra("filterMaxPrice"));
-                    LocalDate filterMinDate = LocalDate.parse(data.getStringExtra("filterMinDate"));
-                    LocalDate filterMaxDate = LocalDate.parse(data.getStringExtra("filterMaxDate"));
+                    Date filterMinDate = transformarFecha(data.getStringExtra("filterMinDate"));
+                    Date filterMaxDate = transformarFecha(data.getStringExtra("filterMaxDate"));
 
                     for (int i = 0; i < trips.size(); i++) {
                         Trip trip = trips.get(i);
@@ -100,8 +102,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
                         Boolean validMinPrice = trip.getPrecio().compareTo(filterMinPrice) >= 0;
                         Boolean validMaxPrice = trip.getPrecio().compareTo(filterMaxPrice) <= 0;
 
-                        Boolean validStartDate = trip.getFechaIda().isAfter(filterMinDate) || trip.getFechaIda().isEqual(filterMinDate);
-                        Boolean validEndDate = trip.getFechaVuelta().isBefore(filterMaxDate) || trip.getFechaVuelta().isEqual(filterMaxDate);
+                        Boolean validStartDate = trip.getFechaIda().compareTo(filterMinDate) > 0|| trip.getFechaIda().compareTo(filterMinDate) == 0;
+                        Boolean validEndDate = trip.getFechaVuelta().compareTo(filterMaxDate) < 0 || trip.getFechaVuelta().compareTo(filterMaxDate) == 0;
 
 
                         if ((validMinPrice && validMaxPrice) || (validStartDate && validEndDate)) {

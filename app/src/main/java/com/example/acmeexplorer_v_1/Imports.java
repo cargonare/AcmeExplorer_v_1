@@ -14,16 +14,30 @@ import com.google.gson.reflect.TypeToken;
 
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Imports {
     public static Type ArrayTrips = new TypeToken<ArrayList<Trip>>(){}.getType();
 
     public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 
+    public static Date transformarFecha(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static String formatearFecha(Date date) {
+        return new SimpleDateFormat().format(date);
+    }
     public static Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDate.class, new LocalDateConverter())
@@ -37,6 +51,7 @@ public class Imports {
                 throws JsonParseException {
             return DateTimeFormatter.ISO_LOCAL_DATE.parse(json.getAsString(), LocalDate::from);
         }
+
     }
 
 }
