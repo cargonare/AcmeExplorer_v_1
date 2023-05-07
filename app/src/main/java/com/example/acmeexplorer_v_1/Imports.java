@@ -1,5 +1,11 @@
 package com.example.acmeexplorer_v_1;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.os.Bundle;
+
+import androidx.fragment.app.DialogFragment;
+
 import com.example.acmeexplorer_v_1.models.Trip;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,12 +26,15 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
-public class Imports {
+public class Imports extends DialogFragment {
     public static Type ArrayTrips = new TypeToken<ArrayList<Trip>>(){}.getType();
 
     public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+
+    private DatePickerDialog.OnDateSetListener listener;
 
     public static Date transformarFecha(String date) {
         try {
@@ -38,20 +47,27 @@ public class Imports {
     public static String formatearFecha(Date date) {
         return new SimpleDateFormat().format(date);
     }
-    public static Gson gson = new GsonBuilder()
-            .setPrettyPrinting()
-            .registerTypeAdapter(LocalDate.class, new LocalDateConverter())
-            .create();
-    public static class LocalDateConverter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
-        public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(DateTimeFormatter.ISO_LOCAL_DATE.format(src));
-        }
 
-        public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-                throws JsonParseException {
-            return DateTimeFormatter.ISO_LOCAL_DATE.parse(json.getAsString(), LocalDate::from);
-        }
-
+    public static Imports newInstance(DatePickerDialog.OnDateSetListener listener) {
+        Imports fragment = new Imports();
+        fragment.setListener(listener);
+        return fragment;
     }
 
+    public void setListener(DatePickerDialog.OnDateSetListener listener) {
+        this.listener = listener;
+    }
+
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        return new DatePickerDialog(getActivity(), listener, year, month, day);
+    }
+
+    public static String twoDigits(int n) {
+        return (n < 10) ? ("0" + n) : String.valueOf(n);
+    }
 }

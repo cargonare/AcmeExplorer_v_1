@@ -1,7 +1,5 @@
 package com.example.acmeexplorer_v_1;
 
-import static com.example.acmeexplorer_v_1.Imports.formatearFecha;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,11 +12,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.acmeexplorer_v_1.models.Trip;
+import com.google.android.material.snackbar.Snackbar;
 
 public class TripDetailActivity extends AppCompatActivity {
     private ImageView ivImage, ivIcon;
     private TextView tvStartDate, tvEndDate, tvStartCity, tvEndCity, tvPrice;
     private Button payButton;
+    private FirestoreService fireStoreService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +43,18 @@ public class TripDetailActivity extends AppCompatActivity {
         tvEndDate.setText("Fecha de Vuelta: " + trip.getFechaVuelta());
         tvPrice.setText("Precio: " + trip.getPrecio() + "€");
 
-        if(trip.getSeleccionar()) {
-            ivIcon.setImageResource(R.drawable.green_tick);
-            payButton.setVisibility(View.VISIBLE);
-        } else {
-            ivIcon.setImageResource(R.drawable.red_cross);
-            payButton.setVisibility(View.GONE);
-        }
+        ivIcon.setImageResource(trip.getSeleccionar() ? R.drawable.green_tick : R.drawable.red_cross);
+        payButton.setVisibility(trip.getSeleccionar() ? View.VISIBLE : View.INVISIBLE);
+
+        ivIcon.setOnClickListener(view -> {
+            trip.setSeleccionar(!trip.getSeleccionar());
+            fireStoreService.selectTrip(trip.getId(), trip.getSeleccionar()).addOnSuccessListener(queryDocumentSnapshots -> {
+                ivIcon.setImageResource(trip.getSeleccionar() ? R.drawable.green_tick : R.drawable.red_cross);
+                payButton.setVisibility(trip.getSeleccionar() ? View.VISIBLE : View.INVISIBLE);
+            }).addOnFailureListener(e -> {
+                Snackbar.make(view, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
+            });
+        });
 
     }
 

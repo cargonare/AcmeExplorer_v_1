@@ -1,7 +1,6 @@
 package com.example.acmeexplorer_v_1;
 
 import com.example.acmeexplorer_v_1.models.Trip;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,8 +30,8 @@ public class FirestoreService {
         return service;
     }
 
-    public void saveTrip(Trip trip, OnCompleteListener<DocumentReference> listener){
-        mDatabase.collection("user").document(userId).collection("trip").add(trip).addOnCompleteListener(listener);
+    public Task<DocumentReference> saveTrip(Trip trip){
+        return mDatabase.collection("user").document(userId).collection("trip").add(trip);
     }
 
     public void getTrip(String id, EventListener<DocumentSnapshot> snapshotListener) {

@@ -3,6 +3,8 @@ package com.example.acmeexplorer_v_1;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -25,6 +27,8 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
 
     private RecyclerView rvSelectedTripList;
 
+    private ProgressBar loadingPB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +41,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
         rvSelectedTripList.setAdapter(selectedTripsAdapter);
         gridLayoutManager = new GridLayoutManager(this, 1);
         rvSelectedTripList.setLayoutManager(gridLayoutManager);
+        loadingPB = findViewById(R.id.selectedLoadingPB);
 
         firestoreService.getSelectedTrips().addOnSuccessListener(queryDocumentSnapshots -> {
             List<DocumentSnapshot> documentSnapshotList = queryDocumentSnapshots.getDocuments();
@@ -47,6 +52,7 @@ public class SelectedTripListActivity extends AppCompatActivity implements Trips
             }
 
             Log.d("epic", selectedTrips.toString());
+            loadingPB.setVisibility(View.GONE);
             selectedTripsAdapter.notifyDataSetChanged();
         }).addOnFailureListener(e -> {
             Snackbar.make(rvSelectedTripList, "Error: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();

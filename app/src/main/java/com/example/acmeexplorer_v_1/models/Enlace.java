@@ -1,9 +1,14 @@
 package com.example.acmeexplorer_v_1.models;
 
 
+import android.content.Intent;
+
+import com.example.acmeexplorer_v_1.LoginActivity;
+import com.example.acmeexplorer_v_1.MainActivity;
 import com.example.acmeexplorer_v_1.R;
 import com.example.acmeexplorer_v_1.SelectedTripListActivity;
 import com.example.acmeexplorer_v_1.TripListActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -48,6 +53,9 @@ public class Enlace {
         enlace.add(new Enlace(R.drawable.viajar, "Viajes disponibles", TripListActivity.class));
         enlace.add(new Enlace(R.drawable.objetivo, "Viajes seleccionados", SelectedTripListActivity.class));
 
+        if(FirebaseAuth.getInstance().getCurrentUser() == null) {
+            enlace.add(new Enlace(R.drawable.login, "Login", LoginActivity.class));
+        }
         return enlace;
     }
 }
