@@ -27,10 +27,12 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
         EnlaceAdapter adapter = new EnlaceAdapter(enlace, this);
 
         ListView lvMainMenu = findViewById(R.id.lvMainMenu);
+
+        lvMainMenu.setAdapter(adapter);
+
         bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(this);
 
-        lvMainMenu.setAdapter(adapter);
     }
 
     @Override
@@ -39,6 +41,10 @@ public class MenuActivity extends AppCompatActivity implements BottomNavigationV
             case R.id.page_profile:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                return true;
+
+            case R.id.page_upload:
+                startActivity(new Intent(this, FirebaseStorageExample.class));
                 return true;
         }
 

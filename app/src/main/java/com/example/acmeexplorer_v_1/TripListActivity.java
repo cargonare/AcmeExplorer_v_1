@@ -58,8 +58,6 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
         gridLayoutManager = new GridLayoutManager(this, 1);
         rvTripList.setLayoutManager(gridLayoutManager);
 
-        cargarViajes();
-
         switchColumns.setOnCheckedChangeListener((compoundButton, b) -> {
             if (compoundButton.isChecked()) {
                 gridLayoutManager.setSpanCount(2);
@@ -70,6 +68,8 @@ public class TripListActivity extends AppCompatActivity implements TripsAdapter.
 
         filterButton.setOnClickListener(view -> filterTrips());
         newTripButton.setOnClickListener(view -> addTrip());
+
+        cargarViajes();
     }
 
     @Override
