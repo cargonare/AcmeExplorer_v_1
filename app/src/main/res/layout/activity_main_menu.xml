@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,15 +9,15 @@
         android:id="@+id/lvMainMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"
+        android:layout_above="@+id/btnSignOut"
         android:layout_alignParentTop="true"
-        />
+        android:divider="@null" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+    <Button
+        android:id="@+id/btnSignOut"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu"/>
+        android:text="Sign Out" />
 
 </RelativeLayout>
