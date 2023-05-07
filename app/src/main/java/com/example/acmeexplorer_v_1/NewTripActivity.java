@@ -47,6 +47,7 @@ public class NewTripActivity extends AppCompatActivity {
         Imports newFragment = Imports.newInstance((datePicker, year, month, day) -> {
             final String selectedDate = twoDigits(day) + "-" + twoDigits(month + 1) + "-" + year;
             editText.setText(selectedDate);
+            System.out.println("Viendo editText" + editText.getText());
         });
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }

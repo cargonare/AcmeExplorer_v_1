@@ -1,5 +1,7 @@
 package com.example.acmeexplorer_v_1;
 
+import static com.example.acmeexplorer_v_1.Imports.formatearFecha;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -39,8 +41,8 @@ public class TripDetailActivity extends AppCompatActivity {
         Glide.with(this).load(trip.getUrlImagenes()).into(ivImage);
         tvStartCity.setText("Sale desde: " + trip.getCiudadProcedencia());
         tvEndCity.setText(trip.getCiudadDestino());
-        tvStartDate.setText("Fecha de Ida: " + trip.getFechaIda());
-        tvEndDate.setText("Fecha de Vuelta: " + trip.getFechaVuelta());
+        tvStartDate.setText("Fecha de Ida: " + formatearFecha(trip.getFechaIda()));
+        tvEndDate.setText("Fecha de Vuelta: " + formatearFecha(trip.getFechaVuelta()));
         tvPrice.setText("Precio: " + trip.getPrecio() + "€");
 
         ivIcon.setImageResource(trip.getSeleccionar() ? R.drawable.green_tick : R.drawable.red_cross);

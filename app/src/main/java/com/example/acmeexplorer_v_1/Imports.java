@@ -38,7 +38,7 @@ public class Imports extends DialogFragment {
 
     public static Date transformarFecha(String date) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            return new SimpleDateFormat("dd-MM-yyyy").parse(date);
         } catch (ParseException e) {
             return null;
         }
@@ -64,7 +64,9 @@ public class Imports extends DialogFragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        return new DatePickerDialog(getActivity(), listener, year, month, day);
+        DatePickerDialog res = new DatePickerDialog(getActivity(), listener, year, month, day);
+
+        return res;
     }
 
     public static String twoDigits(int n) {
